@@ -9,6 +9,16 @@
             "name": "Fall Classic",
             "date": "2020-10-22 13:30:00",
             "numberOfPlaces": "13"
+        },
+         {
+            "name": "Spring Festival 2022",
+            "date": "2022-03-20 10:30:00",
+            "numberOfPlaces": "10"
+        },
+        {
+            "name": "Summer Classic 2022",
+            "date": "2022-06-01 13:30:00",
+            "numberOfPlaces": "23"
         }
     ]
 }
