@@ -8,6 +8,7 @@
     <h2>{{competition['name']}}</h2>
     Places available: {{competition['numberOfPlaces']}}
     <br> {{club['name']}}: {{club['points']}} points available </br>
+    {{ club['name'] }}: {{ competition[club['name']] }} places for this competition </br>
 </br>
 
     <form action="/purchasePlaces" method="post">
