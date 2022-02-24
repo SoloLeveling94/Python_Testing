@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, abort
 
 
 def loadClubs():
@@ -45,24 +45,28 @@ def showSummary():
     except IndexError:
         flash("Your email is not registered!")
         return redirect(url_for('index'))
-    return render_template('welcome.html', date=date, club=club, competitions=competitions)
-
+    return render_template('welcome.html', date=date, club=club, competitions=competitions,
+                           listClubs=sorted(clubs, key=lambda x: int(x['points'])))
 
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
     date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    if date > foundCompetition['date']:
-        flash("Choose an another competition. The date has expired!")
-        return render_template('welcome.html', club=club, competitions=competitions, date=date)
+    
+    try:
+        foundClub = [c for c in clubs if c['name'] == club][0]
+        foundCompetition = [c for c in competitions if c['name'] == competition][0]
 
-    if foundClub and foundCompetition:
-        return render_template('booking.html', club=foundClub, competition=foundCompetition, date=date)
-    else:
+        if date > foundCompetition['date']:
+            flash("Choose an another competition. The date has expired!")
+            return render_template('welcome.html', club=club, competitions=competitions, date=date)
+
+        if foundClub and foundCompetition:
+            return render_template('booking.html', club=foundClub, competition=foundCompetition, date=date,
+                                   listClubs=sorted(clubs, key=lambda x: int(x['points'])))
+    except IndexError:
         flash("Something went wrong-please try again")
-        return render_template('welcome.html', club=club, competitions=competitions)
+        return render_template('welcome.html', club=club, competitions=competitions, date=date)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
@@ -96,7 +100,8 @@ def purchasePlaces():
             competition[club['name']] = int(competition[club['name']]) - placesRequired
 
             flash('Great-booking complete!')
-            return render_template('welcome.html', club=club, competitions=competitions, date=date)
+            return render_template('welcome.html', club=club, competitions=competitions, date=date,
+                                   listClubs=sorted(clubs, key=lambda x: int(x['points'])))
 
     except ValueError:
         flash("Enter a number!")

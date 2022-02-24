@@ -22,3 +22,9 @@ def test_login_with_unregistered_email(test_client):
     response = test_client.post('/showSummary', data={"email": "test@xyz.com"}, follow_redirects=True)
     assert response.status_code == 200
     assert b"Your email is not registered!" in response.data
+
+
+def test_logout(test_client):
+    response = test_client.get('/logout', follow_redirects=True)
+    assert response.status_code == 200
+

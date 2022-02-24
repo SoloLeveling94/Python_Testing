@@ -40,19 +40,19 @@ def test_negative_places_required(test_client):
     assert b"Enter a positive number to book it!" in response.data
 
 
+def test_not_number_places_required(test_client):
+    response = test_client.post('/purchasePlaces', data={"club": "Simply Lift", "competition": "Spring Festival",
+                                                         "places": "abc"}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b"Enter a number!" in response.data
+
+
 def test_max_12_places_competition(test_client):
     response = test_client.post('/purchasePlaces', data={"club": "Simply Lift", "competition": "Spring Festival",
                                                          "places": 13}, follow_redirects=True)
     assert response.status_code == 200, f"You can not book more 12 places in this competition" \
                                         f"{response.status_code}"
 
-
-def test_updated_points_club(test_client):
-    response = test_client.post('/purchasePlaces', data={"club": "Simply Lift", "competition": "Spring Festival",
-                                                         "places": 10}, follow_redirects=True)
-    assert response.status_code == 200
-    assert server.clubs[0]['points'] == 3
-    assert server.competitions[0]['numberOfPlaces'] == 15
 
 
 
