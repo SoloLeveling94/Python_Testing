@@ -23,12 +23,15 @@ clubs = loadClubs()
 
 max_places = "12"
 
-for comp in competitions:
-    for c in clubs:
-        comp[c['name']] = max_places
+
+def add_max_points(competitions, clubs):
+    for comp in competitions:
+        for c in clubs:
+            comp[c['name']] = max_places
+    return competitions
 
 
-print(competitions)
+competitions = add_max_points(competitions, clubs)
 
 
 @app.route('/')
