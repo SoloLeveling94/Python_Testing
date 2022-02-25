@@ -33,7 +33,7 @@ print(competitions)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', listClubs=sorted(clubs, key=lambda x: int(x['points'])))
 
 
 @app.route('/showSummary', methods=['POST'])
@@ -91,7 +91,7 @@ def purchasePlaces():
             return render_template('booking.html', club=club, competition=competition)
 
         elif placesRequired > int(competition[club['name']]):
-            flash(f"You can not book more {competition[club['name']]} places in this competition")
+            flash(f"You can not book more than {competition[club['name']]} places in this competition")
             return render_template('booking.html', club=club, competition=competition)
 
         else:
